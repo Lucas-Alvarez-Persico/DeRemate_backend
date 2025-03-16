@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deremate.demo.DTO.RegisterRequestDTO;
 import com.deremate.demo.entity.User;
 import com.deremate.demo.exception.InvalidCodeException;
 import com.deremate.demo.service.Interface.UserService;
@@ -27,9 +28,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public void register(String username, String code) throws InvalidCodeException {
-        userService.register(username, code);
-        throw new UnsupportedOperationException();
+    public void register(@RequestBody RegisterRequestDTO registerRequestDTO) throws InvalidCodeException {
+        System.out.println("Username: " + registerRequestDTO.getUsername() + " Code: " + registerRequestDTO.getCode());
+        userService.register(registerRequestDTO.getUsername(), registerRequestDTO.getCode());;
     }
 
     @PostMapping("/login")
