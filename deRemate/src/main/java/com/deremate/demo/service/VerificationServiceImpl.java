@@ -14,6 +14,7 @@ import com.deremate.demo.service.Interface.VerificationService;
 public class VerificationServiceImpl implements VerificationService{
     
     private final Map<User, String> verificationCodes = new HashMap<>();
+    private final Map<String, String> recoverPasswordCodes = new HashMap<>();
 
     @Override
     public String generateVerificationCode() {
@@ -28,13 +29,18 @@ public class VerificationServiceImpl implements VerificationService{
     }
 
     @Override
+    public void saveRecoveryPasswordCode(String username, String code) {
+        recoverPasswordCodes.put(username, code);
+    }
+    
+    @Override
     public User verifyCode(String username, String code) throws InvalidCodeException {
         for (Map.Entry<User, String> entry : verificationCodes.entrySet()) {
             if (entry.getKey().getUsername().equals(username) && entry.getValue().equals(code)) {
                 return entry.getKey();
             }
         }
-        throw new InvalidCodeException("Invalid verification code");
+        throw new InvalidCodeException("El código ingresado es incorrecto.");
     }
 
     @Override
