@@ -15,5 +15,8 @@ public interface VerificationService {
 
     public void removeVerificationCode(User user);
     
+    public boolean verifyCodeRecovery(String username, String code) throws InvalidCodeException;
+
+    public void removeRecoveryCode(String username);
 
 }

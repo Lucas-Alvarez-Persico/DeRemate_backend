@@ -15,4 +15,6 @@ public interface UserService {
 
     public void  RecoverPasswordMail(String username);
 
+    public String RecoverPassword(String username, String code) throws InvalidCodeException;
+
 }

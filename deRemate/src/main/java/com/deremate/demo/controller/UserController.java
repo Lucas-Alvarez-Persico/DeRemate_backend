@@ -39,4 +39,15 @@ public class UserController {
         return userService.login(login);
     }
 
+    @PostMapping("/recover/mail")
+    public void recoverMail(@RequestBody String username){
+        userService.RecoverPasswordMail(username);
+    }
+
+    @PostMapping("/recover")
+    public String recover(@RequestBody RegisterRequestDTO recoverRequest) throws InvalidCodeException {
+        return userService.RecoverPassword(recoverRequest.getUsername(), recoverRequest.getCode());
+    }
+
+
 }

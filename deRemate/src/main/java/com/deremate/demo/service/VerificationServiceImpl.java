@@ -30,7 +30,8 @@ public class VerificationServiceImpl implements VerificationService{
 
     @Override
     public void saveRecoveryPasswordCode(String username, String code) {
-        recoverPasswordCodes.put(username, code);
+        String cleanUsername = username.trim().replaceAll("^\"|\"$", ""); // Quita comillas al inicio y final
+        recoverPasswordCodes.put(cleanUsername,code);
     }
     
     @Override
@@ -46,6 +47,20 @@ public class VerificationServiceImpl implements VerificationService{
     @Override
     public void removeVerificationCode(User user) {
         verificationCodes.remove(user);
+    }
+
+    @Override
+    public boolean verifyCodeRecovery(String username, String code) throws InvalidCodeException { 
+        String check = recoverPasswordCodes.get(username);
+        if (check.equals(code)) {
+            return true;
+        }
+        throw new InvalidCodeException("El código ingresado es incorrecto.");
+    }
+
+    @Override
+    public void removeRecoveryCode(String username) {
+        recoverPasswordCodes.remove(username);
     }
 
 }

@@ -68,10 +68,16 @@ public class UserServiceImpl implements UserService {
         return;
     }
     
-/*
+
     @Override
-    public String RecoverPassword(String username, String code)
+    public String RecoverPassword(String username, String code) throws InvalidCodeException{
+        if(verificationService.verifyCodeRecovery(username, code)){
+            verificationService.removeRecoveryCode(username);
+            return "Correcto";
+        }
+        return "Incorrecto";
+    }
 
 
-*/
+
 }
