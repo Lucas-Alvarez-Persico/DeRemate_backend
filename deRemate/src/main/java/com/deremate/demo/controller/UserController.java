@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
 import com.deremate.demo.DTO.AuthenticationResponseDTO;
 import com.deremate.demo.DTO.LoginRequestDTO;
 import com.deremate.demo.DTO.RegisterRequestDTO;
@@ -49,5 +50,11 @@ public class UserController {
         return userService.RecoverPassword(recoverRequest.getUsername(), recoverRequest.getCode());
     }
 
+    
+    @PostMapping("/newPassword")
+    public Optional<User> newPassword(@RequestBody LoginRequestDTO login){
+        return userService.getCurrentUser(login.getUsername(), login.getPassword());
+    
+    }
 
 }
