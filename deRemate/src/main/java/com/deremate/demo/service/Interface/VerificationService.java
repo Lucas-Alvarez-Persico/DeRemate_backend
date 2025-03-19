@@ -9,9 +9,14 @@ public interface VerificationService {
 
     public void saveVerificationCode(User user, String code);
 
+    public void saveRecoveryPasswordCode(String username, String code);
+
     public User verifyCode(String username, String code) throws InvalidCodeException;
 
     public void removeVerificationCode(User user);
     
+    public boolean verifyCodeRecovery(String username, String code) throws InvalidCodeException;
+
+    public void removeRecoveryCode(String username);
 
 }
