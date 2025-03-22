@@ -1,7 +1,6 @@
 package com.deremate.demo.service.Interface;
 
 import com.deremate.demo.entity.User;
-import com.deremate.demo.exception.InvalidCodeException;
 
 public interface VerificationService {
 
@@ -11,11 +10,11 @@ public interface VerificationService {
 
     public void saveRecoveryPasswordCode(String username, String code);
 
-    public User verifyCode(String username, String code) throws InvalidCodeException;
+    public User verifyCode(String username, String code);
 
     public void removeVerificationCode(User user);
     
-    public boolean verifyCodeRecovery(String username, String code) throws InvalidCodeException;
+    public boolean verifyCodeRecovery(String username, String code);
 
     public void removeRecoveryCode(String username);
 

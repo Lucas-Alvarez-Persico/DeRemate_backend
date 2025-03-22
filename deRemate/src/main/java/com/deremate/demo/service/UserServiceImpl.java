@@ -3,7 +3,6 @@ package com.deremate.demo.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.core.Authentication;
@@ -11,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.deremate.demo.DTO.AuthenticationResponseDTO;
 import com.deremate.demo.entity.User;
-import com.deremate.demo.exception.InvalidCodeException;
 import com.deremate.demo.service.Interface.UserService;
 import com.deremate.demo.service.Interface.VerificationService;
 import com.deremate.demo.DTO.LoginRequestDTO;
@@ -34,53 +32,67 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public void registerMail(User user) {
+    public String registerMail(User user) {
+        if(!userRepository.existsByUsername(user.getUsername())){
+            String code = verificationService.generateVerificationCode();
+            verificationService.saveVerificationCode(user, code);
+            String subject = "Código de verificación del correo";
+            String body = "Tu código de verificación es: " + code
+                    + ". Porfavor, ingrese el código en la aplicación para validar la cuenta.";
 
-        String code = verificationService.generateVerificationCode();
-        verificationService.saveVerificationCode(user, code);
-        String subject = "Código de verificación del correo";
-        String body = "Tu código de verificación es: " + code
-                + ". Porfavor, ingrese el código en la aplicación para validar la cuenta.";
-
-        mailService.sendConfirmationMail(user.getUsername(), subject, body);
-        return;
+            mailService.sendConfirmationMail(user.getUsername(), subject, body);
+            return "se envio el correo.";
+        }else{
+            throw new RuntimeException("El usuario ya existe.");
+        }
     }
 
     @Override
-    public AuthenticationResponseDTO register(String username, String code) throws InvalidCodeException {
+    public AuthenticationResponseDTO register(String username, String code){
+        try{
+            User user = verificationService.verifyCode(username, code);
+            verificationService.removeVerificationCode(user);
+            return authenticationService.register(user);
 
-        User user = verificationService.verifyCode(username, code);
-        verificationService.removeVerificationCode(user);
-        return authenticationService.register(user);
-
+    }catch(RuntimeException e){
+        throw new RuntimeException("El código ingresado es incorrecto.");
     }
+}
 
     @Override
     public AuthenticationResponseDTO login(LoginRequestDTO login) {
         return authenticationService.authenticate(login);
     }
 
-    // SEGUIR DESPUES RECOVER PASSWORD BY MAIL:
 
     @Override
-    public void RecoverPasswordMail(String username) {
-        String code = verificationService.generateVerificationCode();
-        verificationService.saveRecoveryPasswordCode(username, code);
-        String subject = "Código de recupero de contraseña";
-        String body = "Tu código de verificación es: " + code
-                + ". Porfavor, ingrese el código en la aplicación para poder cambiar su contraseña.";
+    public String RecoverPasswordMail(String username) {
+        String cleanUsername = username.trim().replaceAll("^\"|\"$", ""); // Quita comillas al inicio y final
+        if(userRepository.existsByUsername(cleanUsername)){
+            String code = verificationService.generateVerificationCode();
+            verificationService.saveRecoveryPasswordCode(username, code);
+            String subject = "Código de recupero de contraseña";
+            String body = "Tu código de verificación es: " + code
+                    + ". Porfavor, ingrese el código en la aplicación para poder cambiar su contraseña.";
 
-        mailService.sendConfirmationMail(username, subject, body);
-        return;
+            mailService.sendConfirmationMail(username, subject, body);
+            return "se envio el correo.";
+        }else{
+            throw new RuntimeException("El usuario no existe.");
+        }
+
     }
 
     @Override
-    public String RecoverPassword(String username, String code) throws InvalidCodeException {
-        if (verificationService.verifyCodeRecovery(username, code)) {
+    public String RecoverPassword(String username, String code) {
+        try{
+            verificationService.verifyCodeRecovery(username, code);
             verificationService.removeRecoveryCode(username);
             return authenticationService.generateRecoverToken(username);
+        }catch(RuntimeException e){
+            throw new RuntimeException("El código ingresado es incorrecto.");
+
         }
-        return "Incorrecto";
     }
 
     public Optional<User> getCurrentUser(String username, String newPassword) {
