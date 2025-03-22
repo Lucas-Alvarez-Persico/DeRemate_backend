@@ -7,7 +7,6 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 
 import com.deremate.demo.entity.User;
-import com.deremate.demo.exception.InvalidCodeException;
 import com.deremate.demo.service.Interface.VerificationService;
 
 @Service
@@ -35,13 +34,13 @@ public class VerificationServiceImpl implements VerificationService{
     }
     
     @Override
-    public User verifyCode(String username, String code) throws InvalidCodeException {
+    public User verifyCode(String username, String code){
         for (Map.Entry<User, String> entry : verificationCodes.entrySet()) {
             if (entry.getKey().getUsername().equals(username) && entry.getValue().equals(code)) {
                 return entry.getKey();
             }
         }
-        throw new InvalidCodeException("El código ingresado es incorrecto.");
+        throw new RuntimeException("");
     }
 
     @Override
@@ -50,12 +49,12 @@ public class VerificationServiceImpl implements VerificationService{
     }
 
     @Override
-    public boolean verifyCodeRecovery(String username, String code) throws InvalidCodeException { 
+    public boolean verifyCodeRecovery(String username, String code){ 
         String check = recoverPasswordCodes.get(username);
         if (check.equals(code)) {
             return true;
         }
-        throw new InvalidCodeException("El código ingresado es incorrecto.");
+        throw new RuntimeException("El código ingresado es incorrecto.");
     }
 
     @Override
