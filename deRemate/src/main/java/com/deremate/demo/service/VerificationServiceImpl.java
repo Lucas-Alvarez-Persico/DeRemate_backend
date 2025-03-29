@@ -18,7 +18,7 @@ public class VerificationServiceImpl implements VerificationService{
     @Override
     public String generateVerificationCode() {
         Random random = new Random();
-        int code = 100000 + random.nextInt(999999); // Ensures a 6-digit codeo
+        int code = 100000 + random.nextInt(899999); // Ensures a 6-digit codeo
         return String.valueOf(code);
     }
 

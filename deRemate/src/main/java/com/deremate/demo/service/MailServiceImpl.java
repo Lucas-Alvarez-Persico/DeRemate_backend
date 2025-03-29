@@ -20,7 +20,7 @@ public class MailServiceImpl implements MailService {
         message.setSubject(subject);
         message.setText(body);
         message.setFrom("deremateg10@gmail.com");
-
+        
         mailSender.send(message);
     }
 

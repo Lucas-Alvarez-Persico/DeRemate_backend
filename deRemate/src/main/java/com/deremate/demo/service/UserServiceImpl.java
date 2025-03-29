@@ -39,8 +39,12 @@ public class UserServiceImpl implements UserService {
             String subject = "Código de verificación del correo";
             String body = "Tu código de verificación es: " + code
                     + ". Porfavor, ingrese el código en la aplicación para validar la cuenta.";
-
-            mailService.sendConfirmationMail(user.getUsername(), subject, body);
+            System.out.println("ENVIANDO MAIL..............");
+            try {
+                mailService.sendConfirmationMail(user.getUsername(), subject, body);
+            } catch (Exception e) {
+                throw new RuntimeException("ERROR AL ENVIAR MAIL");
+            } 
             return "se envio el correo.";
         }else{
             throw new RuntimeException("El usuario ya existe.");
