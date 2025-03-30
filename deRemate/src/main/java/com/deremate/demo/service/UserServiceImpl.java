@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String RecoverPasswordMail(String username) {
         String cleanUsername = username.trim().replaceAll("^\"|\"$", ""); // Quita comillas al inicio y final
+        System.out.println(cleanUsername);
         if(userRepository.existsByUsername(cleanUsername)){
             String code = verificationService.generateVerificationCode();
             verificationService.saveRecoveryPasswordCode(username, code);
@@ -100,14 +101,17 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<User> getCurrentUser(String username, String newPassword) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || authentication.getPrincipal() instanceof String) {
-        User user = userRepository.findByUsername(username) 
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        authenticationService.changePassword(newPassword, user);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(username);
+        if (authentication == null || authentication.getPrincipal() instanceof String) {
+            User user = userRepository.findByUsername(username) 
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            authenticationService.changePassword(newPassword, user);
+            return Optional.of(user);
+
+        }
+        return Optional.empty();
     }
-        return null;
-}
 
 
 }
