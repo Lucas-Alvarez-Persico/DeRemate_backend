@@ -12,6 +12,9 @@ import com.deremate.demo.DTO.AuthenticationResponseDTO;
 import com.deremate.demo.entity.User;
 import com.deremate.demo.service.Interface.UserService;
 import com.deremate.demo.service.Interface.VerificationService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.deremate.demo.DTO.LoginRequestDTO;
 
 import com.deremate.demo.repository.UserRepository;
@@ -100,6 +103,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public Optional<User> getCurrentUser(String username, String newPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(username);
@@ -111,6 +115,20 @@ public class UserServiceImpl implements UserService {
 
         }
         return Optional.empty();
+    }
+
+    
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        System.out.println(authentication.getPrincipal());
+        System.out.println(authentication);
+        User user = (User) authentication.getPrincipal(); 
+        System.out.println(user.getId());
+
+        return user;
     }
 
 

@@ -1,6 +1,7 @@
 package com.deremate.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,21 @@ public class OrderServiceImpl implements OrderService {
         
     };
 
+    @Override
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+        .orElseThrow(() -> new IllegalStateException("Orden no encontrado."));
+    }
 
-
+    @Override
+    public Boolean changeState(Order order){
+        try {
+            order.setState(true);
+            orderRepository.save(order);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     
 }
