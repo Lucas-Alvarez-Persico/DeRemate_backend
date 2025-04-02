@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/user/newPassword").access(hasValidPurpose())
                         .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/order/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
 
