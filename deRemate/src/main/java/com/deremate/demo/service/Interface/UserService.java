@@ -20,4 +20,6 @@ public interface UserService {
 
     public Optional<User> getCurrentUser(String username, String newPassword);
 
+    public User getCurrentUser();
+
 }
