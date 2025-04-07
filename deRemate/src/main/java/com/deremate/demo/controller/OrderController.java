@@ -10,7 +10,6 @@ import com.deremate.demo.DTO.CreateOrderDTO;
 import com.deremate.demo.entity.Order;
 import com.deremate.demo.service.Interface.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

@@ -13,8 +13,6 @@ import com.deremate.demo.entity.User;
 import com.deremate.demo.service.Interface.UserService;
 import com.deremate.demo.service.Interface.VerificationService;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import com.deremate.demo.DTO.LoginRequestDTO;
 
 import com.deremate.demo.repository.UserRepository;
