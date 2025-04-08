@@ -38,9 +38,8 @@ public class Delivery {
     @JoinColumn()
     private User user;
  
-    @Column(name = "start_time", nullable = false)
-    @Builder.Default
-    private LocalDateTime startTime = LocalDateTime.now();
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
     @Column(name = "end_time")
     private LocalDateTime endTime;
@@ -48,6 +47,6 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     @Column(name = "DeliveryStatus", nullable = false)
-    private DeliveryStatus status = DeliveryStatus.EN_CAMINO;
+    private DeliveryStatus status = DeliveryStatus.PENDIENTE;
     
 }

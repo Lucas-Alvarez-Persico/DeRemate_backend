@@ -12,8 +12,5 @@ public interface OrderService {
 
     public Order getOrderById(Long orderId);
 
-    public Boolean changeState(Order order);
-
-
 } 
 

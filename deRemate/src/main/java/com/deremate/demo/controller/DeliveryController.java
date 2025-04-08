@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.deremate.demo.DTO.DeliveryDTO;
 import com.deremate.demo.entity.DeliveryStatus;
-
-
-
-
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/delivery")
@@ -26,24 +24,19 @@ public class DeliveryController {
     @Autowired
     DeliveryService deliveryService;
 
-    @PostMapping("/{orderId}")
-    public String createDelivery(@PathVariable Long orderId) {
-        System.out.println("jejejeje");
-        deliveryService.createDelivery(orderId);
-        return "ok";
-    }
-
-    @GetMapping("/enCamino")
-    public List<DeliveryDTO> getCurrentDeliverysByUser() {
-        DeliveryStatus status = DeliveryStatus.EN_CAMINO;
-        return deliveryService.getCurrentDeliverysByUserAndStatus(status);
+    @GetMapping("/{status}")
+    public List<DeliveryDTO> getCurrentDeliverysByUser(@PathVariable String status) {
+        DeliveryStatus deliveryStatus = DeliveryStatus.valueOf(status.toUpperCase());
+        return deliveryService.getCurrentDeliverysByUserAndStatus(deliveryStatus);
     }
     
-    @GetMapping("/Completado")
-    public List<DeliveryDTO> getCurrentDeliverysByUserAndCompleted() {
-        DeliveryStatus status = DeliveryStatus.COMPLETADO;
-        return deliveryService.getCurrentDeliverysByUserAndStatus(status);
+    @PutMapping("/{deliveryId}")
+    public String assingDelivery(@PathVariable Long deliveryId) {
+        return deliveryService.assingDelivery(deliveryId);
     }
     
-    
+    @PutMapping("completed/{deliveryId}")
+    public String putMethodName(@PathVariable Long deliveryId) {
+        return deliveryService.completeDelivery(deliveryId);
+    }
 }

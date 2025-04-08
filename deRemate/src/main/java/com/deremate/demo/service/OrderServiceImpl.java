@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.deremate.demo.entity.Order;
 import com.deremate.demo.repository.OrderRepository;
+import com.deremate.demo.service.Interface.DeliveryService;
 import com.deremate.demo.service.Interface.OrderService;
 
 @Service
@@ -14,6 +15,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    DeliveryService deliveryService;
 
     @Override
     public List<Order> getOrders(){
@@ -27,8 +31,8 @@ public class OrderServiceImpl implements OrderService {
         order.setClient(client);
         order.setAddress(address);
         order.setPackageLocation(packageLocation);
-        orderRepository.save(order);
-
+        Order orderSaved = orderRepository.save(order);
+        deliveryService.createDelivery(orderSaved);
         
     };
 
@@ -36,17 +40,6 @@ public class OrderServiceImpl implements OrderService {
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
         .orElseThrow(() -> new IllegalStateException("Orden no encontrado."));
-    }
-
-    @Override
-    public Boolean changeState(Order order){
-        try {
-            order.setState(true);
-            orderRepository.save(order);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
     
 }

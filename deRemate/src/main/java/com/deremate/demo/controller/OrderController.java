@@ -13,17 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 @RequestMapping("/order")
 public class OrderController {
     
-
     @Autowired
     private OrderService orderService;
-
-
 
     @GetMapping()
     public List<Order> getOrders() {
@@ -31,11 +26,8 @@ public class OrderController {
     }
     
     @PostMapping()
-    public String postMethodName(@RequestBody CreateOrderDTO order) {
+    public String createOrder(@RequestBody CreateOrderDTO order) {
         orderService.createOrders(order.getClient(), order.getAddress(), order.getPackageLocation());
         return "ok";
     }
-
-
-
 }
