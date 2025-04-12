@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,8 +17,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 @Data
 @Builder
@@ -41,9 +38,8 @@ public class Delivery {
     @JoinColumn()
     private User user;
  
-    @Column(name = "start_time", nullable = false)
-    @Builder.Default
-    private LocalDateTime startTime = LocalDateTime.now();
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
     @Column(name = "end_time")
     private LocalDateTime endTime;
@@ -51,6 +47,6 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     @Column(name = "DeliveryStatus", nullable = false)
-    private DeliveryStatus status = DeliveryStatus.EN_CAMINO;
+    private DeliveryStatus status = DeliveryStatus.PENDIENTE;
     
 }

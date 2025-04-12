@@ -10,21 +10,15 @@ import com.deremate.demo.DTO.CreateOrderDTO;
 import com.deremate.demo.entity.Order;
 import com.deremate.demo.service.Interface.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
 
 @RestController
 @RequestMapping("/order")
 public class OrderController {
     
-
     @Autowired
     private OrderService orderService;
-
-
 
     @GetMapping()
     public List<Order> getOrders() {
@@ -32,11 +26,8 @@ public class OrderController {
     }
     
     @PostMapping()
-    public String postMethodName(@RequestBody CreateOrderDTO order) {
+    public String createOrder(@RequestBody CreateOrderDTO order) {
         orderService.createOrders(order.getClient(), order.getAddress(), order.getPackageLocation());
         return "ok";
     }
-
-
-
 }

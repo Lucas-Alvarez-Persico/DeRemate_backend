@@ -15,7 +15,6 @@ import com.deremate.demo.service.Interface.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -42,7 +41,6 @@ public class UserController {
             ErrorResponse errorResponse = new ErrorResponse("Error al registrar usuario: "+e.getMessage());
             return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
         }
-        
     }
 
     @PostMapping("/login")
@@ -62,8 +60,8 @@ public class UserController {
         }catch(RuntimeException e){
             ErrorResponse errorResponse = new ErrorResponse("Error al enviar correo: "+e.getMessage());
             return new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
+        }
     }
-}
 
     @PostMapping("/recover")
     public ResponseEntity<?> recover(@RequestBody RegisterRequestDTO recoverRequest){
@@ -76,11 +74,9 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/newPassword")
     public Optional<User> newPassword(@RequestBody LoginRequestDTO login){
         return userService.getCurrentUser(login.getUsername(), login.getPassword());
     
     }
-
 }
