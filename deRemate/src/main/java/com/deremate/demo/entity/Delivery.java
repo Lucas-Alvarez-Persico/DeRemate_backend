@@ -44,6 +44,9 @@ public class Delivery {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Column(name = "code")
+    private String code;
+
     @Enumerated(EnumType.STRING)
     @Builder.Default
     @Column(name = "DeliveryStatus", nullable = false)

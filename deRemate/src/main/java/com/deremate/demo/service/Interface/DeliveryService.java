@@ -12,7 +12,7 @@ public interface DeliveryService {
 
     public String assingDelivery (Long deliveryId);
 
-    public String completeDelivery (Long deliveryId);
+    public String completeDelivery (Long deliveryId, String code);
 
     public List<DeliveryDTO> getCurrentDeliverysByUserAndStatus(DeliveryStatus status);
 

@@ -36,6 +36,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     public void createDelivery(Order order) {
         Delivery delivery = new Delivery();
         delivery.setOrder(order);
+        delivery.setCode(String.valueOf((int)(Math.random() * 900) + 100));
         deliveryRepository.save(delivery);
     }
 
@@ -44,6 +45,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         Delivery delivery = deliveryRepository.findById(deliveryId)
         .orElseThrow(() -> new IllegalStateException("Delivery no encontrado."));
         User user = userService.getCurrentUser();
+        if(deliveryRepository.existsByUserAndStatus(user, DeliveryStatus.EN_CAMINO)){
+            throw new IllegalStateException("Ya tienes un delivery en camino.");
+        }
         delivery.setUser(user);
         delivery.setStatus(DeliveryStatus.EN_CAMINO);
         delivery.setStartTime(java.time.LocalDateTime.now());
@@ -52,9 +56,15 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public String completeDelivery (Long deliveryId){
+    public String completeDelivery (Long deliveryId, String code){
         Delivery delivery = deliveryRepository.findById(deliveryId)
         .orElseThrow(() -> new IllegalStateException("Delivery no encontrado."));
+        if(!delivery.getCode().equals(code)){
+            throw new IllegalStateException("El codigo no es correcto.");
+        }
+        if(delivery.getStatus() != DeliveryStatus.EN_CAMINO){
+            throw new IllegalStateException("El delivery no esta en camino.");
+        }
         delivery.setStatus(DeliveryStatus.COMPLETADO);
         delivery.setEndTime(java.time.LocalDateTime.now());
         deliveryRepository.save(delivery);

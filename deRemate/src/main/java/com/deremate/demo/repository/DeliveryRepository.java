@@ -17,4 +17,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 
     List<Delivery> findByStatus(DeliveryStatus status);
 
+    Boolean existsByUserAndStatus(User user, DeliveryStatus status);
+
 }
