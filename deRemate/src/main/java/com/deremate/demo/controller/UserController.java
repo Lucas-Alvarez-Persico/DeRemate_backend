@@ -3,17 +3,23 @@ package com.deremate.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 import com.deremate.demo.DTO.LoginRequestDTO;
 import com.deremate.demo.DTO.RegisterRequestDTO;
+import com.deremate.demo.DTO.UserDTO;
 import com.deremate.demo.ErrorResponse.ErrorResponse;
 import com.deremate.demo.entity.User;
 import com.deremate.demo.service.Interface.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/user")
@@ -78,5 +84,13 @@ public class UserController {
     public Optional<User> newPassword(@RequestBody LoginRequestDTO login){
         return userService.getCurrentUser(login.getUsername(), login.getPassword());
     
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserDTO> getProfile() {
+    
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDTO profile = userService.getProfile(user.getUsername());
+        return ResponseEntity.ok(profile);
     }
 }

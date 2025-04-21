@@ -9,6 +9,7 @@ import com.deremate.demo.repository.UserRepository;
 
 import com.deremate.demo.DTO.AuthenticationResponseDTO;
 import com.deremate.demo.DTO.LoginRequestDTO;
+import com.deremate.demo.DTO.UserDTO;
 import com.deremate.demo.Config.JwtService;
 import com.deremate.demo.entity.User;
 
@@ -64,5 +65,18 @@ public class AuthenticationService {
         user.setPassword(newPassword);
 
         repository.save(user);
+    }
+
+    public UserDTO getProfile(String username) {
+        User user = repository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return new UserDTO(user.getName(), user.getUsername());
+    }
+
+    public User getCurrentUser(String token) {
+        String username = jwtService.extractUsername(token); // decodifica el token
+        return repository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 }

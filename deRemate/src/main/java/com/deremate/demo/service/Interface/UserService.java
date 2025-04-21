@@ -2,6 +2,7 @@ package com.deremate.demo.service.Interface;
 
 import com.deremate.demo.DTO.AuthenticationResponseDTO;
 import com.deremate.demo.DTO.LoginRequestDTO;
+import com.deremate.demo.DTO.UserDTO;
 import com.deremate.demo.entity.User;
 
 import java.util.Optional;
@@ -21,5 +22,7 @@ public interface UserService {
     public Optional<User> getCurrentUser(String username, String newPassword);
 
     public User getCurrentUser();
+
+    public UserDTO getProfile(String username);
 
 }
