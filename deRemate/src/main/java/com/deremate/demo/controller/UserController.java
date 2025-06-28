@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 import com.deremate.demo.DTO.LoginRequestDTO;
+import com.deremate.demo.DTO.PushTokenDTO;
 import com.deremate.demo.DTO.RegisterRequestDTO;
 import com.deremate.demo.DTO.UserDTO;
 import com.deremate.demo.ErrorResponse.ErrorResponse;
+import com.deremate.demo.entity.PushToken;
 import com.deremate.demo.entity.User;
+import com.deremate.demo.repository.PushTokenRepository;
 import com.deremate.demo.service.Interface.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -27,6 +28,9 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PushTokenRepository pushTokenRepository;
 
     @PostMapping("/register/mail")
     public ResponseEntity<?> registerMail(@RequestBody User user ) {
@@ -93,4 +97,26 @@ public class UserController {
         UserDTO profile = userService.getProfile(user.getUsername());
         return ResponseEntity.ok(profile);
     }
+
+    @PostMapping("/push-token")
+    public ResponseEntity<?> savePushToken(@RequestBody PushTokenDTO dto) {
+        System.out.println("hola" + dto);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Evitá duplicados
+        boolean exists = pushTokenRepository.findByToken(dto.getToken())
+            .stream()
+            .anyMatch(token -> token.getUser().getId().equals(user.getId()));
+
+        if (!exists) {
+            PushToken pushToken = PushToken.builder()
+                .token(dto.getToken())
+                .user(user)
+                .build();
+            pushTokenRepository.save(pushToken);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
 }

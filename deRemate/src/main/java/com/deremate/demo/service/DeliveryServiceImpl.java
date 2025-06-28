@@ -32,12 +32,16 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Lazy
     OrderService orderService;
 
+    @Autowired
+    private NotificationServiceImpl notificationService;
+
     @Override
     public void createDelivery(Order order) {
         Delivery delivery = new Delivery();
         delivery.setOrder(order);
         delivery.setCode(String.valueOf((int)(Math.random() * 900) + 100));
         deliveryRepository.save(delivery);
+        notificationService.enviarNotificacion("Nuevo pedido", "Hay una nueva orden disponible para entregar.");
     }
 
     @Override

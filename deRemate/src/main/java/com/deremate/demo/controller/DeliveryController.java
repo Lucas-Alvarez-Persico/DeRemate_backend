@@ -67,7 +67,7 @@ public class DeliveryController {
         }
     }
 
-    @GetMapping(value = "/entregas/{id}/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "entregas/{id}/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> generarQrEntrega(@PathVariable Long id) {
         Delivery delivery = deliveryRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
