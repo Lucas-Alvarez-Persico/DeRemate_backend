@@ -33,7 +33,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     OrderService orderService;
 
     @Autowired
-    private NotificationServiceImpl notificationService;
+    NotificationService notificationService;
 
     @Override
     public void createDelivery(Order order) {
@@ -41,7 +41,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setOrder(order);
         delivery.setCode(String.valueOf((int)(Math.random() * 900) + 100));
         deliveryRepository.save(delivery);
-        notificationService.enviarNotificacion("Nuevo pedido", "Hay una nueva orden disponible para entregar.");
+        notificationService.createNotification("Nueva orden disponible", "Se a creado una nueva orden");
     }
 
     @Override
@@ -56,6 +56,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setStatus(DeliveryStatus.EN_CAMINO);
         delivery.setStartTime(java.time.LocalDateTime.now());
         deliveryRepository.save(delivery);
+        notificationService.createNotification("Una orden a sido asignada", "Se a seleccionado la orden " + deliveryId);
         return "ok";
     }
 
