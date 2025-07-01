@@ -1,5 +1,7 @@
 package com.deremate.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +23,8 @@ public class Notification {
     @Column(name = "subtitle", nullable = false)
     private String subtitle;
 
-    @Builder.Default
-    @Column(name = "read")
-    private Boolean read = false;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
 }

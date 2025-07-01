@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.deremate.demo.entity.Notification;
+import com.deremate.demo.entity.User;
 import com.deremate.demo.repository.NotificationRepository;
+import com.deremate.demo.repository.UserRepository;
 
 @Service
 public class NotificationService {
@@ -15,15 +18,27 @@ public class NotificationService {
     @Autowired
     NotificationRepository notificationRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public void createNotification(String title, String subtitle){
-        Notification notification = new Notification();
-        notification.setTitle(title);
-        notification.setSubtitle(subtitle);
-        notificationRepository.save(notification);
+        List<User> allUsers = userRepository.findAll();
+
+        for (User user : allUsers) {
+            Notification notification = Notification.builder()
+                    .title(title)
+                    .subtitle(subtitle)
+                    .user(user)
+                    .build();
+
+            notificationRepository.save(notification);
+        }
     }
 
 public List<Notification> getUnreadNotifications() {
-    List<Notification> lista = notificationRepository.getAllByRead(false);
+    User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    List<Notification> lista = notificationRepository.findByUser(user);
+
     int nuevasOrders = 0;
     List<Notification> resultado = new ArrayList<>();
 
@@ -33,9 +48,7 @@ public List<Notification> getUnreadNotifications() {
         } else {
             resultado.add(noti);
         }
-
-        noti.setRead(true);
-        notificationRepository.save(noti);
+        notificationRepository.delete(noti);
     }
 
     if (nuevasOrders > 0) {
@@ -43,7 +56,7 @@ public List<Notification> getUnreadNotifications() {
         resumen.setTitle("Resumen de nuevas órdenes");
         resumen.setSubtitle("Se ha(n) creado " + nuevasOrders + " órden(es) nueva(s).");
         resultado.add(resumen);
-    };
+    }
 
     return resultado;
 }
